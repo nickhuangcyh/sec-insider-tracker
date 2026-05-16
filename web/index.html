@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEC Insider Tracker - 內部人交易追蹤器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .type-P { color: #059669; font-weight: bold; } /* Green for Purchase */
+        .type-S { color: #dc2626; font-weight: bold; } /* Red for Sale */
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">🚀 SEC Insider Tracker</h1>
+                <p class="text-gray-600">追蹤美國上市公司內部人持股變動 (Form 4)</p>
+            </div>
+            <div id="last-update" class="text-sm text-gray-500 text-right">
+                最後更新日期: --
+            </div>
+        </header>
+
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">搜尋代碼或姓名</label>
+                    <input type="text" id="search-input" placeholder="例如: NVDA, Huang Jen Hsun..." 
+                           class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border p-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">選擇日期</label>
+                    <select id="date-select" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border p-2">
+                        <option>載入中...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">代碼 (Ticker)</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">內部人 (Insider)</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職位</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">類型</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">價值 (USD)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">連結</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table" class="bg-white divide-y divide-gray-200">
+                        <!-- Data rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-data" class="hidden text-center py-8 text-gray-500">
+                找不到相符的交易資料。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTransactions = [];
+
+        async function init() {
+            try {
+                // 1. Fetch Index
+                const indexResponse = await fetch('../data/index.json');
+                const dates = await indexResponse.json();
+                
+                if (dates.length === 0) {
+                    document.getElementById('date-select').innerHTML = '<option>尚無資料</option>';
+                    return;
+                }
+
+                // 2. Populate Date Select
+                const dateSelect = document.getElementById('date-select');
+                dateSelect.innerHTML = '';
+                dates.forEach(date => {
+                    const option = document.createElement('option');
+                    option.value = date;
+                    option.textContent = date;
+                    dateSelect.appendChild(option);
+                });
+
+                // 3. Load Latest Date
+                loadDate(dates[0]);
+
+                // 4. Listeners
+                dateSelect.addEventListener('change', (e) => loadDate(e.target.value));
+                document.getElementById('search-input').addEventListener('input', filterData);
+
+            } catch (err) {
+                console.error("Initialization failed:", err);
+                document.getElementById('date-select').innerHTML = '<option>加載出錯</option>';
+            }
+        }
+
+        async function loadDate(date) {
+            try {
+                document.getElementById('last-update').textContent = `資料日期: ${date}`;
+                const response = await fetch(`../data/${date}.json`);
+                const data = await response.json();
+                currentTransactions = data.transactions;
+                renderTable(currentTransactions);
+            } catch (err) {
+                console.error(`Failed to load data for ${date}:`, err);
+            }
+        }
+
+        function renderTable(transactions) {
+            const tbody = document.getElementById('data-table');
+            const noData = document.getElementById('no-data');
+            tbody.innerHTML = '';
+
+            if (transactions.length === 0) {
+                noData.classList.remove('hidden');
+                return;
+            } else {
+                noData.classList.add('hidden');
+            }
+
+            transactions.forEach(tx => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${tx.ticker}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tx.insider}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tx.title}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm type-${tx.type}">${tx.type === 'P' ? '買入 (BUY)' : '賣出 (SELL)'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono">$${(tx.value || 0).toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                        <a href="${tx.url}" target="_blank" class="text-blue-600 hover:text-blue-900">SEC 申報</a>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterData() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = currentTransactions.filter(tx => 
+                tx.ticker.toLowerCase().includes(query) || 
+                tx.insider.toLowerCase().includes(query) ||
+                tx.company.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
+
+        init();
+    </script>
+</body>
+</html>

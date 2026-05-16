@@ -1,0 +1,125 @@
+{
+  "date": "2026-05-15",
+  "transactions": [
+    {
+      "ticker": "AAON",
+      "company": "AAON, INC.",
+      "insider": "Casey Kidwell",
+      "title": "Chief Administration Officer",
+      "date": "2026-05-14",
+      "type": "S",
+      "shares": 2084,
+      "price": 138.3,
+      "value": 288217.2,
+      "url": "https://www.sec.gov/Archives/edgar/data/824142/0001929992-26-000009-index.html"
+    },
+    {
+      "ticker": "AAON",
+      "company": "AAON, INC.",
+      "insider": "Casey Kidwell",
+      "title": "Chief Administration Officer",
+      "date": "2026-05-14",
+      "type": "S",
+      "shares": 1069,
+      "price": 138.31,
+      "value": 147853.39,
+      "url": "https://www.sec.gov/Archives/edgar/data/824142/0001929992-26-000009-index.html"
+    },
+    {
+      "ticker": "USCB",
+      "company": "USCB FINANCIAL HOLDINGS, INC.",
+      "insider": "Ramon Abadin",
+      "title": "Director",
+      "date": "2026-05-14",
+      "type": "S",
+      "shares": 9000,
+      "price": 18.21,
+      "value": 163890.0,
+      "url": "https://www.sec.gov/Archives/edgar/data/1916995/0001437749-26-017239-index.html"
+    },
+    {
+      "ticker": "ABEO",
+      "company": "ABEONA THERAPEUTICS INC.",
+      "insider": "Eric Crombez",
+      "title": "Director",
+      "date": "2026-05-15",
+      "type": "S",
+      "shares": 26143,
+      "price": 5.5325,
+      "value": 144636.1475,
+      "url": "https://www.sec.gov/Archives/edgar/data/318306/0001493152-26-023912-index.html"
+    },
+    {
+      "ticker": "DOCN",
+      "company": "DigitalOcean Holdings, Inc.",
+      "insider": "Access Industries Holdings LLC",
+      "title": "Other",
+      "date": "2026-05-13",
+      "type": "S",
+      "shares": 3278988,
+      "price": 150.3,
+      "value": 492831896.40000004,
+      "url": "https://www.sec.gov/Archives/edgar/data/1508226/0001193125-26-227564-index.html"
+    },
+    {
+      "ticker": "DOCN",
+      "company": "DigitalOcean Holdings, Inc.",
+      "insider": "Access Industries Holdings LLC",
+      "title": "Other",
+      "date": "2026-05-13",
+      "type": "S",
+      "shares": 21012,
+      "price": 150.3,
+      "value": 3158103.6,
+      "url": "https://www.sec.gov/Archives/edgar/data/1508226/0001193125-26-227564-index.html"
+    },
+    {
+      "ticker": "RLYB",
+      "company": "Rallybio Corp",
+      "insider": "ADAR1 Capital Management, LLC",
+      "title": "10% Owner",
+      "date": "2026-05-13",
+      "type": "P",
+      "shares": 4081,
+      "price": 13.7993,
+      "value": 56314.9433,
+      "url": "https://www.sec.gov/Archives/edgar/data/1940272/0001104659-26-062883-index.html"
+    },
+    {
+      "ticker": "RLYB",
+      "company": "Rallybio Corp",
+      "insider": "ADAR1 Capital Management, LLC",
+      "title": "10% Owner",
+      "date": "2026-05-13",
+      "type": "P",
+      "shares": 75178,
+      "price": 14.0,
+      "value": 1052492.0,
+      "url": "https://www.sec.gov/Archives/edgar/data/1940272/0001104659-26-062883-index.html"
+    },
+    {
+      "ticker": "RLYB",
+      "company": "Rallybio Corp",
+      "insider": "ADAR1 Capital Management, LLC",
+      "title": "10% Owner",
+      "date": "2026-05-15",
+      "type": "P",
+      "shares": 100,
+      "price": 13.8,
+      "value": 1380.0,
+      "url": "https://www.sec.gov/Archives/edgar/data/1940272/0001104659-26-062883-index.html"
+    },
+    {
+      "ticker": "RLYB",
+      "company": "Rallybio Corp",
+      "insider": "ADAR1 Capital Management, LLC",
+      "title": "10% Owner",
+      "date": "2026-05-15",
+      "type": "P",
+      "shares": 200,
+      "price": 13.95,
+      "value": 2790.0,
+      "url": "https://www.sec.gov/Archives/edgar/data/1940272/0001104659-26-062883-index.html"
+    }
+  ]
+}
