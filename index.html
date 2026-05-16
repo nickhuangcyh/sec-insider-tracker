@@ -64,18 +64,24 @@
         let currentTransactions = [];
 
         async function init() {
+            const dateSelect = document.getElementById('date-select');
             try {
                 // 1. Fetch Index
-                const indexResponse = await fetch('../data/index.json');
+                // 使用相對路徑，確保在 repo 子目錄下也能正確運作
+                const indexResponse = await fetch('data/index.json');
+                
+                if (!indexResponse.ok) {
+                    throw new Error(`找不到索引檔案 (HTTP ${indexResponse.status})`);
+                }
+
                 const dates = await indexResponse.json();
                 
-                if (dates.length === 0) {
-                    document.getElementById('date-select').innerHTML = '<option>尚無資料</option>';
+                if (!Array.isArray(dates) || dates.length === 0) {
+                    dateSelect.innerHTML = '<option>尚無資料</option>';
                     return;
                 }
 
                 // 2. Populate Date Select
-                const dateSelect = document.getElementById('date-select');
                 dateSelect.innerHTML = '';
                 dates.forEach(date => {
                     const option = document.createElement('option');
@@ -93,19 +99,25 @@
 
             } catch (err) {
                 console.error("Initialization failed:", err);
-                document.getElementById('date-select').innerHTML = '<option>加載出錯</option>';
+                dateSelect.innerHTML = `<option>錯誤: ${err.message}</option>`;
             }
         }
 
         async function loadDate(date) {
             try {
                 document.getElementById('last-update').textContent = `資料日期: ${date}`;
-                const response = await fetch(`../data/${date}.json`);
+                const response = await fetch(`data/${date}.json`);
+                
+                if (!response.ok) {
+                    throw new Error(`無法載入 ${date} 的資料`);
+                }
+
                 const data = await response.json();
                 currentTransactions = data.transactions;
                 renderTable(currentTransactions);
             } catch (err) {
                 console.error(`Failed to load data for ${date}:`, err);
+                alert(`無法加載日期 ${date} 的詳細資料`);
             }
         }
 
@@ -114,7 +126,7 @@
             const noData = document.getElementById('no-data');
             tbody.innerHTML = '';
 
-            if (transactions.length === 0) {
+            if (!transactions || transactions.length === 0) {
                 noData.classList.remove('hidden');
                 return;
             } else {
@@ -140,9 +152,9 @@
         function filterData() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const filtered = currentTransactions.filter(tx => 
-                tx.ticker.toLowerCase().includes(query) || 
-                tx.insider.toLowerCase().includes(query) ||
-                tx.company.toLowerCase().includes(query)
+                (tx.ticker && tx.ticker.toLowerCase().includes(query)) || 
+                (tx.insider && tx.insider.toLowerCase().includes(query)) ||
+                (tx.company && tx.company.toLowerCase().includes(query))
             );
             renderTable(filtered);
         }
