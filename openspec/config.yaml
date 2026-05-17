@@ -1,4 +1,25 @@
 schema: spec-driven
+context: |
+  Tech stack: TypeScript, React 19, Vite
+  Data source: SEC EDGAR API (free, no API key, requires User-Agent header)
+  Deployment: GitHub Pages (static site)
+  Data pipeline: GitHub Actions cron job, commits JSON to repo
+  Styling: Tailwind CSS
+  Charts: Recharts
+  Testing: Vitest
+rules:
+  proposal:
+    - Include SEC EDGAR API endpoint details
+    - Specify GitHub Actions schedule
+  specs:
+    - Use Given/When/Then format for scenarios
+    - Include data schema definitions
+  design:
+    - Include data flow diagram
+    - Specify file structure
+  tasks:
+    - Group by layer (pipeline / frontend / deployment)
+    - Include test tasks
 
 # Project context (optional)
 # This is shown to AI when creating artifacts.
