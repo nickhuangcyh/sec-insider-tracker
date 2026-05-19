@@ -82,6 +82,15 @@ def save_failed(failed):
         os.remove(FAILED_FILE)
 
 
+TRANSACTION_NAMES = {
+    'P': 'Purchase', 'S': 'Sale', 'A': 'Grant',
+    'M': 'Exercise', 'X': 'Exercise', 'F': 'Tax Withholding',
+    'G': 'Gift', 'D': 'Disposition', 'C': 'Conversion',
+}
+
+TRACKED_CODES = set(TRANSACTION_NAMES.keys())
+
+
 def process_filing(filing, accession):
     """解析單一 filing，成功回傳 transactions list，失敗 raise exception。"""
     signal.alarm(FILING_TIMEOUT_SECONDS)
@@ -90,21 +99,40 @@ def process_filing(filing, accession):
         signal.alarm(0)
         return []
 
+    table = f4.non_derivative_table
+    if not table.has_transactions:
+        signal.alarm(0)
+        return []
+
+    owner = f4.reporting_owners[0]
+    ticker = getattr(f4.issuer, 'ticker', 'N/A')
+    company = getattr(f4.issuer, 'name', 'N/A')
+
     results = []
-    for trans in f4.non_derivative_table.transactions:
-        if not trans or trans.transaction_code not in ['P', 'S']:
+    df = table.transactions.data
+    for idx, row in df.iterrows():
+        code = row.get('Code', '')
+        if code not in TRACKED_CODES:
             continue
-        owner = f4.reporting_owners[0]
+        shares_raw = row.get('Shares')
+        price_raw = row.get('Price')
+        remaining_raw = row.get('Remaining')
+        shares = int(shares_raw) if shares_raw is not None and shares_raw == shares_raw else 0
+        price = float(price_raw) if price_raw is not None and price_raw == price_raw else 0.0
+        remaining = int(remaining_raw) if remaining_raw is not None and remaining_raw == remaining_raw else None
         results.append({
-            "ticker": getattr(f4.issuer, 'ticker', 'N/A'),
-            "company": getattr(f4.issuer, 'name', 'N/A'),
+            "ticker": ticker,
+            "company": company,
             "insider": owner.name,
+            "relationship": owner.position or "N/A",
             "title": owner.officer_title or owner.position or "N/A",
-            "date": trans.date,
-            "type": trans.transaction_code,
-            "shares": int(trans.shares) if trans.shares is not None else 0,
-            "price": float(trans.price) if trans.price is not None else 0.0,
-            "value": float(trans.shares or 0) * float(trans.price or 0),
+            "date": row.get('Date', ''),
+            "type": code,
+            "transaction": TRANSACTION_NAMES.get(code, code),
+            "shares": shares,
+            "price": price,
+            "value": shares * price,
+            "shares_total": remaining,
             "url": filing.url
         })
     signal.alarm(0)
