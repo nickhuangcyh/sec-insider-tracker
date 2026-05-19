@@ -180,6 +180,7 @@ def fetch_and_process(start_date, end_date):
         for idx, filing in enumerate(date_filings, start=1):
             accession = getattr(filing, 'accession_no', 'N/A')
             if accession in seen_accessions:
+                print(f"  [{idx}/{len(date_filings)}] {accession} 重複，跳過", flush=True)
                 continue
             seen_accessions.add(accession)
             print(f"  [{idx}/{len(date_filings)}] {accession}", end="", flush=True)
