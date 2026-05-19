@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { fetchIndex, fetchDateData, fetchMultipleDates } from './api'
 import { Transaction } from './types'
 import TransactionTable from './components/TransactionTable'
+import TransactionFilter from './components/TransactionFilter'
 
 type Tab = 'latest' | 'topInsider' | 'topOwner'
 
@@ -11,6 +12,7 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState('')
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(['Purchase', 'Sale']))
 
   // Load index on mount
   useEffect(() => {
@@ -71,25 +73,27 @@ export default function App() {
           </span>
         ))}
 
-        {/* Date selector for latest tab */}
-        {tab === 'latest' && dates.length > 0 && (
-          <select
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="ml-auto border border-gray-300 rounded px-2 py-1 text-sm"
-          >
-            {dates.map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-        )}
+        <div className="ml-auto flex items-center gap-2">
+          {tab === 'latest' && dates.length > 0 && (
+            <select
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            >
+              {dates.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          )}
+          <TransactionFilter selectedTypes={selectedTypes} onChange={setSelectedTypes} />
+        </div>
       </div>
 
       {/* Content */}
       {loading ? (
         <p className="text-center py-8 text-gray-500">Loading...</p>
       ) : (
-        <TransactionTable transactions={transactions} />
+        <TransactionTable transactions={transactions.filter(tx => selectedTypes.has(tx.transaction))} />
       )}
     </div>
   )
