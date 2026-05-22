@@ -1,0 +1,9 @@
+{
+  "2026-05-21": [
+    {
+      "accession": "0000912282-26-000751",
+      "url": "https://www.sec.gov/Archives/edgar/data/2111243/0000912282-26-000751-index.html",
+      "reason": "AttributeError: 'DataFrame' object has no attribute 'Code'"
+    }
+  ]
+}
