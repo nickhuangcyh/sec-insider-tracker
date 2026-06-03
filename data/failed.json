@@ -5,5 +5,12 @@
       "url": "https://www.sec.gov/Archives/edgar/data/2111243/0000912282-26-000751-index.html",
       "reason": "AttributeError: 'DataFrame' object has no attribute 'Code'"
     }
+  ],
+  "2026-06-02": [
+    {
+      "accession": "0000897069-26-001304",
+      "url": "https://www.sec.gov/Archives/edgar/data/1255402/0000897069-26-001304-index.html",
+      "reason": "AttributeError: 'DataFrame' object has no attribute 'Code'"
+    }
   ]
 }
