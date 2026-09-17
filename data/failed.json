@@ -5385,5 +5385,12 @@
       "url": "https://www.sec.gov/Archives/edgar/data/1302378/0001493152-26-042324-index.html",
       "reason": "TooManyRequestsError: \nSEC Rate Limit Exceeded (HTTP 429)\n==================================\n\nURL: https://data.sec.gov/submissions/CIK0001302378.json\nEstimated Wait: ~10 minutes\n\nWhat happened:\n  Your request rate exceeded the SEC's limit of 10 requests/second.\n  Your IP address has been temporarily blocked.\n\n⚠ Important: Do NOT retry immediately!\n  Continuing to send requests during the block period will EXTEND it.\n  The SEC penalizes continued requests during timeout.\n\nWhat to do:\n  1. Wait at least 10 minutes before retrying\n  2. Reduce your request rate (edgartools defaults to 9 req/sec)\n  3. Consider using local storage: download_edgar_data()\n\nTo adjust rate limit:\n  import os\n  os.environ['EDGAR_RATE_LIMIT_PER_SEC'] = '5'  # More conservative\n\nDetails: https://www.sec.gov/os/webmaster-faq#developers"
     }
+  ],
+  "2026-09-16": [
+    {
+      "accession": "0002061393-26-000014",
+      "url": "https://www.sec.gov/Archives/edgar/data/2061393/0002061393-26-000014-index.html",
+      "reason": "timeout"
+    }
   ]
 }
